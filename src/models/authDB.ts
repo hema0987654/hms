@@ -46,39 +46,6 @@ const usersBD = {
     }
   },
 
-  // ✅ تجيب المستخدم بالـ verification_token
-  async findByToken(token: string) {
-    const query = `
-      SELECT * 
-      FROM users 
-      WHERE verification_token = $1
-    `;
-    try {
-      const result = await pool.query(query, [token]);
-      return result.rows[0] || null;
-    } catch (error) {
-      console.error("Error finding user by token:", error);
-      throw error;
-    }
-  },
-
-  // ✅ تحدث حالة التفعيل وتمسح التوكن
-  async verifyUser(id: number) {
-    const query = `
-      UPDATE users 
-      SET is_verified = true, verification_token = NULL
-      WHERE id = $1
-      RETURNING *;
-    `;
-    try {
-      const result = await pool.query(query, [id]);
-      return result.rows[0] || null;
-    } catch (error) {
-      console.error("Error verifying user:", error);
-      throw error;
-    }
-  },
-
   async updatepassword(email: string, newPassword: string) {
     const query = `
       UPDATE users 

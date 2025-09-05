@@ -1,4 +1,4 @@
-import pool from '../config/DB.js';
+import pool from "../config/DB.js";
 
 interface TempUser {
   name: string;
@@ -25,7 +25,6 @@ export const findTempUserByEmailAndOtp = async (email: string, otp: string) => {
     [email, otp]
   );
 };
-
 
 export const deleteTempUser = async (email: string) => {
   return pool.query(`DELETE FROM temp_users WHERE email=$1`, [email]);

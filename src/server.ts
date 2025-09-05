@@ -10,7 +10,6 @@ import userRouter from "./router/authRouter.js";
 const app = express();
 app.use(express.json());
 
-// إعداد Swagger
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
@@ -31,7 +30,6 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/HMS/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Routes
 app.use("/HMS", userRouter);
 
 app.get("/HMS", (req, res) => {
