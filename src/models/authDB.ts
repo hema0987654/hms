@@ -46,6 +46,20 @@ const usersBD = {
     }
   },
 
+  async getUserById(id: number) {
+    const query = `
+      SELECT * 
+      FROM users wHERE id = $1
+    `;
+    try {
+      const result = await pool.query(query, [id]);
+      return result.rows[0] || null;
+    } catch (error) {
+      console.error("Error getting user by ID:", error);
+      throw error;
+    }
+  },
+
   async updatepassword(email: string, newPassword: string) {
     const query = `
       UPDATE users 

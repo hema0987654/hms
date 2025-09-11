@@ -30,6 +30,11 @@ class UserService {
     );
   }
 
+  private otp = otpGenerator.generate(6, {
+        upperCaseAlphabets: false,
+        specialChars: false,
+        lowerCaseAlphabets: false,
+      });
   private async sendemail(email: string) {
 
     
@@ -38,21 +43,17 @@ class UserService {
         return { success: false, message: "User does not exist" };
       }
 
-      const otp = otpGenerator.generate(6, {
-        upperCaseAlphabets: false,
-        specialChars: false,
-        lowerCaseAlphabets: false,
-      });
+      
       const otpExpires = new Date(Date.now() + 5 * 60 * 1000);
 
       await insertTempUser({
         ...findUser,
         password: findUser.password,
-        otp,
+        otp: this.otp,
         otpExpires,
       });
 
-      await sendOtpEmail(email, otp);
+      await sendOtpEmail(email, this.otp);
      return { success: true, message: "OTP has been sent to your email" };
   }
 
@@ -61,8 +62,24 @@ class UserService {
     try{
 
       const check = checkSuper.validate(infoUsers);
+      const finduser = await usersBD.findUser(infoUsers.email);
       if (!check.success) return { success: false, message: check.message };
-      return await this.sendemail(infoUsers.email);
+      if(finduser) return { success: false, message: "User already exists" };
+      const pasworHash = await bycrbt.hash(infoUsers.password, 10);
+       const otpExpires = new Date(Date.now() + 5 * 60 * 1000);
+
+      await insertTempUser({
+        name: infoUsers.name,
+        email: infoUsers.email,
+        role: infoUsers.role,
+        phone: infoUsers.phone,
+        password: pasworHash,
+        otp: this.otp,
+        otpExpires,
+      });
+      await sendOtpEmail(infoUsers.email, this.otp);
+      return { success: true, message: "OTP has been sent to your email" };
+
     }catch(err:any){
       console.error("SignUp error:", err);
       return { success: false, message: "Internal server error" };

@@ -6,6 +6,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 
 import userRouter from "./router/authRouter.js";
+import  patientRouter  from "./router/patientRouter.js";
 
 const app = express();
 app.use(express.json());
@@ -31,6 +32,7 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/HMS/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/HMS", userRouter);
+app.use("/HMS/patients", patientRouter)
 
 app.get("/HMS", (req, res) => {
   res.send("welcome with HMS");
