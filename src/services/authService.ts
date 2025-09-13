@@ -26,7 +26,7 @@ class UserService {
     return jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       process.env.jwt_secret as string,
-      { expiresIn: "1d" }
+      { expiresIn: "7d" }
     );
   }
 

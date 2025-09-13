@@ -49,7 +49,7 @@ const patientDB = {
     const query = `SELECT * FROM patients`;
     try {
       const result = await pool.query(query);
-      return result.rows; // بيرجع كل المرضى
+      return result.rows; 
     } catch (err) {
       console.error("Error fetching patients:", err);
       throw err;

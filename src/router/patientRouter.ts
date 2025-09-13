@@ -123,7 +123,7 @@ patientRouter.post(
 patientRouter.get(
   "/:userId",
   authenticateToken,
-  authorizeRoles("patient", "admin"),
+  authorizeRoles("patient", "admin","doctor"),
   (req, res) => patientController.getPatientByUserId(req, res)
 );
 
