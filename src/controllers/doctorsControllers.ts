@@ -6,13 +6,15 @@ class DoctorController {
 
   async createDoctor(req: Request, res: Response) {
     try {
-      const userId = req.user?.id;
-      if (!userId) {
+      const user_id = req.user?.id;
+      console.log(user_id);
+      
+      if (!user_id) {
         return res
           .status(401)
           .json({ success: false, message: "Invalid token" });
       }
-      const doctorData = { ...req.body, userId };
+      const doctorData = { ...req.body, user_id };
       const result = await this.doctor.createDoctor(doctorData);
       if (!result.success) {
         return res.status(400).json(result);

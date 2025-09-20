@@ -58,7 +58,7 @@ class DoctorValidation {
   }
 
   validateClinicRoom(clinicRoom?: string) {
-    if (!clinicRoom) return { success: true }; // optional
+    if (!clinicRoom) return { success: true }; 
     if (!this.clinicRoomRegex.test(clinicRoom))
       return { success: false, message: "Clinic room format is invalid" };
     return { success: true };
