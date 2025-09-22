@@ -2,17 +2,20 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
+import http from "http";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 
 import userRouter from "./router/authRouter.js";
-import  patientRouter  from "./router/patientRouter.js";
+import patientRouter from "./router/patientRouter.js";
 import doctorsRouter from "./router/doctorsRouter.js";
 import AM from "./router/appointmentRouter.js";
 import preRouter from "./router/prescriptionsRouter.js";
 import pscRouter from "./router/Presc_medsRouter.js";
+import msgRouter from "./router/messagesRouter.js";
+import { setupSocket } from "./Socket..js";
 
-const app = express();
+export const app = express();
 app.use(express.json());
 
 const swaggerOptions = {
@@ -29,26 +32,32 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./dist/router/*.js"], 
+  apis: ["./dist/router/*.js"],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/HMS/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/HMS", userRouter);
-app.use("/HMS/patients", patientRouter)
+app.use("/HMS/patients", patientRouter);
 app.use("/HMS/doctors", doctorsRouter);
 app.use("/HMS/Am", AM);
-app.use("/HMS/prescription",preRouter);
+app.use("/HMS/prescription", preRouter);
 app.use("/HMS/presc-meds", pscRouter);
+app.use("/HMS/messages", msgRouter);
 
 app.get("/HMS", (req, res) => {
   res.send("welcome with HMS");
 });
 
+const server = http.createServer(app);
+setupSocket(server);
+
 const PORT = Number(process.env.PORT) || 8000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}/HMS`);
-  console.log(`📄 Swagger docs available on http://localhost:${PORT}/HMS/api-docs`);
+  console.log(
+    `📄 Swagger docs available on http://localhost:${PORT}/HMS/api-docs`
+  );
 });
