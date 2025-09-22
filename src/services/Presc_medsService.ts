@@ -3,6 +3,7 @@ import type { Presc_meds } from "../models/presc_meds.js";
 import Presc_medsv from "../Validation/Presc_medsv.js";
 import prescriptionDB from "../models/prescriptions.js";
 import usersBD from "../models/authDB.js";
+import { SendingTOpatient } from "../utils/sendOTP.js";
 
 class Presc_medsService {
   constructor() {}
@@ -18,6 +19,23 @@ class Presc_medsService {
       if (!findPrescription.success) {
         return { success: false, message: "Prescription not found" };
       }
+
+      const patient = await usersBD.getUserById(
+        findPrescription.data.patient_id
+      );
+      const doctor = await usersBD.getUserById(findPrescription.data.doctor_id);
+
+      await SendingTOpatient(
+        patient.email,
+        patient.name,
+        doctor.name,
+        findPrescription.data.advice,
+        info.dosage,
+        info.frequency_count,
+        info.duration_days,
+        info.frequency_unit,
+        info.name
+      );
 
       const created = await presc_medsDB.create(info);
       return {

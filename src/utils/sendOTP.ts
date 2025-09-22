@@ -4,8 +4,8 @@ dotenv.config();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.ADMIN_EMAIL,      
-    pass: process.env.EMAIL_PASSWORD,   
+    user: process.env.ADMIN_EMAIL,
+    pass: process.env.EMAIL_PASSWORD,
   },
 });
 
@@ -60,7 +60,6 @@ export const sendOtpEmail = async (email: string, otp: string) => {
 
   await transporter.sendMail(mailOptions);
 };
-
 
 export const sendEmailToPatient = async (
   email: string,
@@ -149,8 +148,8 @@ export const sendEmailToDoctor = async (
   const startFormatted = startsAt.toLocaleString("en-US", options);
   const endFormatted = endsAt.toLocaleString("en-US", options);
 
-const approveUrl = `${process.env.BASE_URL}/HMS/Am/confirm?appointmentId=${appointmentId}&doctorId=${doctorId}`;
-const rejectUrl = `${process.env.BASE_URL}/HMS/Am/reject?appointmentId=${appointmentId}&doctorId=${doctorId}`;
+  const approveUrl = `${process.env.BASE_URL}/HMS/Am/confirm?appointmentId=${appointmentId}&doctorId=${doctorId}`;
+  const rejectUrl = `${process.env.BASE_URL}/HMS/Am/reject?appointmentId=${appointmentId}&doctorId=${doctorId}`;
 
   const mailOptions = {
     from: process.env.ADMIN_EMAIL,
@@ -265,4 +264,78 @@ export const sendEmailRejection = async (
   await transporter.sendMail(mailOptions);
 };
 
+export const SendingTOpatient = async (
+  emailPatient: string,
+  patientName: string,
+  doctorsName: string,
+  advice: string,
+  dosage: string,
+  frequency_count: number,
+  duration_days: number,
+  frequency_unit: string,
+  Namemedicine: string
+) => {
+  const mailOptions = {
+    from: process.env.ADMIN_EMAIL,
+    to: emailPatient,
+    subject: "💊 HMS - Prescription Details",
+    html: `
+      <div style="font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f8fb; padding: 30px;">
+        <div style="max-width: 650px; margin: auto; background: #ffffff; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.1); overflow: hidden;">
+          
+          <!-- Header -->
+          <div style="background: linear-gradient(135deg, #0d6efd, #0a58ca); padding: 25px; text-align: center; color: #fff;">
+            <h1 style="margin: 0; font-size: 24px;">Prescription Details</h1>
+            <p style="margin: 5px 0 0 0; font-size: 14px;">Provided by HMS Healthcare System</p>
+          </div>
 
+          <!-- Body -->
+          <div style="padding: 30px; color: #333; line-height: 1.6;">
+            <p style="font-size: 16px;">Dear <b>${patientName}</b> 👋,</p>
+            <p style="font-size: 16px;">
+              Dr. <b>${doctorsName}</b> has prescribed the following medication:
+            </p>
+
+            <!-- Prescription Table -->
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+              <tr style="background: #f1f6ff;">
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Medicine</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">${Namemedicine}</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Advice</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">${advice}</td>
+              </tr>
+              <tr style="background: #f9fbff;">
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Dosage</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">${dosage}</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Frequency</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">${frequency_count} times per ${frequency_unit}</td>
+              </tr>
+              <tr style="background: #f9fbff;">
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Duration</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">${duration_days} days</td>
+              </tr>
+            </table>
+
+            <!-- Warning -->
+            <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-left: 6px solid #ffc107; border-radius: 6px;">
+              ⚠️ <b>Important:</b> Please follow your doctor’s instructions carefully.  
+              If you experience any unusual side effects, contact your doctor immediately.
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div style="background: #f1f1f1; padding: 15px; text-align: center; font-size: 12px; color: #777;">
+            <p style="margin: 0;">© ${new Date().getFullYear()} HMS. All rights reserved.</p>
+          </div>
+
+        </div>
+      </div>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};

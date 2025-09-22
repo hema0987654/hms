@@ -64,7 +64,7 @@ const pscRouter = Router();
  *       500:
  *         description: Server error
  */
-pscRouter.post("/", authenticateToken, authorizeRoles("doctor"), async (req, res) => {
+pscRouter.post("/", async (req, res) => {
   try {
     await presc_medsControllers.create(req, res);
   } catch (error) {
