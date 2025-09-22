@@ -4,7 +4,6 @@ import type { Request, Response } from "express";
 class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
-  // Create new patient
   async createPatient(req: Request, res: Response) {
     try {
       const userId = req.user?.id;
@@ -26,7 +25,6 @@ class PatientController {
     }
   }
 
-  // Get patient by userId
   async getPatientByUserId(req: Request, res: Response) {
     try {
       const userId = Number(req.params.userId);
@@ -44,7 +42,6 @@ class PatientController {
     }
   }
 
-  // Get all patients
   async getAllPatients(req: Request, res: Response) {
     try {
       const result = await this.patientService.getAllPatients();
@@ -58,7 +55,6 @@ class PatientController {
     }
   }
 
-  // Update patient
   async updatePatient(req: Request, res: Response) {
     try {
       const userId = Number(req.params.userId);
@@ -77,7 +73,6 @@ class PatientController {
     }
   }
 
-  // Delete patient
   async deletePatient(req: Request, res: Response) {
     try {
       const userId = Number(req.params.userId);
