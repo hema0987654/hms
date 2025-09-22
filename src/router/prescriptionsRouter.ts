@@ -188,7 +188,7 @@ preRouter.get("/:id", authenticateToken, authorizeRoles("doctor"), async (req, r
  *       500:
  *         description: Server error
  */
-preRouter.patch("/:id", async (req, res) => {
+preRouter.patch("/:id",authenticateToken,authorizeRoles("doctor"), async (req, res) => {
   try {
     await prescriptionsControllers.update(req, res);
   } catch (err) {

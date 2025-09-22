@@ -10,6 +10,7 @@ import  patientRouter  from "./router/patientRouter.js";
 import doctorsRouter from "./router/doctorsRouter.js";
 import AM from "./router/appointmentRouter.js";
 import preRouter from "./router/prescriptionsRouter.js";
+import pscRouter from "./router/Presc_medsRouter.js";
 
 const app = express();
 app.use(express.json());
@@ -39,6 +40,7 @@ app.use("/HMS/patients", patientRouter)
 app.use("/HMS/doctors", doctorsRouter);
 app.use("/HMS/Am", AM);
 app.use("/HMS/prescription",preRouter);
+app.use("/HMS/presc-meds", pscRouter);
 
 app.get("/HMS", (req, res) => {
   res.send("welcome with HMS");
